@@ -19,13 +19,13 @@ Nginx welcome page HTML.
 ## Exercises
 
 1. We want to be able to run the same stack closer to our customers in the
-US. Please build the same stack in the us-east-1 (Virginia) region, leaving
-the existing one in place too.  Feel free to modify the code and or
+US. Please build the same stack in the `us-east-1` (Virginia) region,
+leaving the existing one in place too.  Feel free to modify the code and or
 structure as much as needed in order to do this. You'll need to consider
 terraform state: each stack should have its own state, but don't feel you
 need to go as far as setting up remote state. As for a CIDR for the new
-VPC, use whatever you feel like, providing it is compliant with RFC-1918
-and does not overlap with the Dublin network.
+VPC, use whatever you feel like, providing that it is compliant with
+RFC-1918 and does not overlap with the Dublin network.
 
 2. Virginia has several availability zones: we want to use 4. However we
 still want to run the stack in Ireland using the 3 AZs there. Modify the
