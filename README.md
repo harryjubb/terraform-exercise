@@ -56,6 +56,8 @@ should still have egress internet connectivity.
 
 3. Extend the count to also apply to EC2 instances, and set the subnet ID dynamically by indexing with the count. Add an ALB to handle round-robin traffic distribution across instances in different subnets / AZs, with healthchecking to ensure that dead instances are not routed to.
 
-4. Set `associate_public_ip_address` to `false` for the instance(s). Add or update the security group to prevent public access: restrict to e.g. the VPC CIDR. Add a public subnet with a public NAT gateway and an internet gateway, and add appropriate route table entries for private subnet(s) to reach the NAT gateway, and for the NAT gateway to reach the internet gateway.
+4. Set `associate_public_ip_address` to `false` for the instance(s). Add or update the security group to prevent public access: restrict to e.g. the VPC CIDR. Add a public subnet with a public NAT gateway, and add appropriate route table entries for private subnet(s) to reach the NAT gateway, and for the NAT gateway to reach the internet gateway.
+
+5. Modularisation, ALB, ECS, custom domain support, refined security groups, disabling default security groups, HTTPS-only, removing SSH access, session manager access.
 
 </details>
