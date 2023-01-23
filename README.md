@@ -50,14 +50,40 @@ should still have egress internet connectivity.
 <details>
 <summary>Expected Outcomes</summary>
 
-1. Add a Virginia TFVars file, with the region changed to `us-east-1`. Create a Terraform workspace for the Virginia deployment, in order to have a separate TF file with little change. Or, go the module route, and have separate folders with module implementations with different variable definitions. Set VPC CIDRs to e.g. `10.10.11.0/24`, the key differential being a change in the second or third octet in order to avoid overlap with the Dublin region.
+1. Add a Virginia TFVars file, with the region changed to `us-east-1`.
+   Create a Terraform workspace for the Virginia deployment, in order to
+   have a separate TF file with little change. Or, go the module route, and
+   have separate folders with module implementations with different
+   variable definitions. Set VPC CIDRs to e.g. `10.10.11.0/24`, the key
+   differential being a change in the second or third octet in order to
+   avoid overlap with the Dublin region.
 
-2. With the workspaces solution, could use a ternary to set a count for subnets in different AZs, according to whether the Virginia region is set. Would be good to see comment on how this is not a scalable approach, and if other regions were to be added, a map would be a better data structure to configure per-region. Would need modifying of the TF to make subnets and route table associations also work by count. Could be done dynamically with the `aws_availability_zones` `data` source, in order to index AZs by the count. Similarly for the module approach, the count can be added as a tfvar, which could equally apply to a workspace approach.
+2. With the workspaces solution, could use a ternary to set a count for
+   subnets in different AZs, according to whether the Virginia region is
+   set. Would be good to see comment on how this is not a scalable
+   approach, and if other regions were to be added, a map would be a better
+   data structure to configure per-region. Would need modifying of the TF
+   to make subnets and route table associations also work by count. Could
+   be done dynamically with the `aws_availability_zones` `data` source, in
+   order to index AZs by the count with `foreach`. Similarly for the module
+   approach, the count can be added as a tfvar, which could equally apply
+   to a workspace approach. Subnet CIDRs could also be set dynamically with
+   the `cidrsubnet` function, by using the loop index as the `netnum`
+   parameter.
 
-3. Extend the count to also apply to EC2 instances, and set the subnet ID dynamically by indexing with the count. Add an ALB to handle round-robin traffic distribution across instances in different subnets / AZs, with healthchecking to ensure that dead instances are not routed to.
+3. Extend the count to also apply to EC2 instances, and set the subnet ID
+   dynamically by indexing with the count. Add an ALB to handle round-robin
+   traffic distribution across instances in different subnets / AZs, with
+   healthchecking to ensure that dead instances are not routed to.
 
-4. Set `associate_public_ip_address` to `false` for the instance(s). Add or update the security group to prevent public access: restrict to e.g. the VPC CIDR. Add a public subnet with a public NAT gateway, and add appropriate route table entries for private subnet(s) to reach the NAT gateway, and for the NAT gateway to reach the internet gateway.
+4. Set `associate_public_ip_address` to `false` for the instance(s). Add or
+   update the security group to prevent public access: restrict to e.g. the
+   VPC CIDR. Add a public subnet with a public NAT gateway, and add
+   appropriate route table entries for private subnet(s) to reach the NAT
+   gateway, and for the NAT gateway to reach the internet gateway.
 
-5. Modularisation, ALB, ECS, custom domain support, refined security groups, disabling default security groups, HTTPS-only, removing SSH access, session manager access.
+5. Modularisation, ALB, ECS, custom domain support, refined security
+   groups, disabling default security groups, HTTPS-only, removing SSH
+   access, session manager access.
 
 </details>
